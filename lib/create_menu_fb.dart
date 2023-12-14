@@ -1,6 +1,5 @@
 // create_menu_fb.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:html/parser.dart';
@@ -42,9 +41,7 @@ class Content {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  var fcmToken = await FirebaseMessaging.instance.getToken(
-      vapidKey:
-          "BOeBIiobFfeKVQ3t6ReVyADtG1fotxDYBKPGStWyWFupULdt5w_RloOk56x3z4NqTLoHkM9DGC84rxf4KXVDj_U");
+  
   runApp(const MyApp());
 }
 
@@ -104,19 +101,20 @@ class InputScreenState extends State<InputScreen> {
         final yyyy = DateFormat('yyyy').format(date);
         final mm = DateFormat('MM').format(date);
         final dd = DateFormat('dd').format(date);
-
+        
         for (int time = 1; time <= 2; time++) {
           if (time == 2 && checkLocation == 4) {
             break;
           }
-
+          
           final QuerySnapshot<Map<String, dynamic>> existingData = await _menu
               .where('selectedDate',
                   isEqualTo: DateFormat('MM-dd').format(date))
               .where('selectedLocation', isEqualTo: location)
               .where('time', isEqualTo: time)
               .get();
-
+          print(existingData);
+          print("$location, $yyyy, $mm, $dd, $time");
           if (existingData.docs.isEmpty) {
             final response = await http.get(
               Uri.parse(
@@ -126,12 +124,12 @@ class InputScreenState extends State<InputScreen> {
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
               },
             );
-
+            print("existingData.docs.isEmpty");
             if (response.statusCode == 200) {
               final document = parse(response.body);
               final foodElements = document.querySelectorAll(
                   ".menu-list-box table tbody tr:nth-child(${time * 2 - 1}) td:nth-child(${date.weekday * 2 - 1})");
-
+              print("response.statusCode == 200");
               if (foodElements.isNotEmpty) {
                 final foodMenu = foodElements[0].text;
                 final modifiedFoodMenu =
@@ -151,6 +149,7 @@ class InputScreenState extends State<InputScreen> {
                   'selectedLocation': selectedLocation,
                   'time': time,
                 });
+                print("foodElements.isNotEmpty");
               }
             }
           }

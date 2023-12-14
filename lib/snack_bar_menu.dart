@@ -5,10 +5,44 @@ import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+class MenuFetcher {
+  static Future<Map<String, dynamic>> fetchMenuDataFromFirestore(
+      DateTime selectedDate, int time) async {
+    try {
+      final today = DateFormat('MM-dd').format(selectedDate);
+
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('Menu')
+              .where('selectedDate', isEqualTo: today)
+              .where('selectedLocation', isEqualTo: 'snack') // 추가 조건
+              .where('time', isEqualTo: time)
+              .get();
+      print(today);
+      print(time);
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        final data = doc.data();
+
+        return {
+          'menuLines': List<String>.from(data['menuLines']),
+          'selectedDate': data['selectedDate'],
+          'selectedLocation': data['selectedLocation'],
+          'time': data['time'],
+        };
+      } else {
+        return {'error': '해당 날짜의 메뉴가 존재하지 않습니다.'};
+      }
+    } catch (e) {
+      return {'error': '오류: $e'};
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -83,10 +117,28 @@ class _MyListWidgetState extends State<MyListWidget3> {
         });
       }
     } catch (e) {
-      setState(() {
-        foodData = "오류: $e";
-      });
+      fetchMenuDataFromFirestore();
     }
+  }
+
+  void fetchMenuDataFromFirestore() async {
+      String dataMenu_s = "";
+      final dataMenu =
+          await MenuFetcher.fetchMenuDataFromFirestore(widget.selectedDate, 1);
+      print("Fetched menuLunch data: $dataMenu");
+      
+      if (dataMenu.containsKey('error')) {
+        print("메뉴없음확인");
+        setState(() {
+          foodData = "크롬 보안정책상 지난데이터는 안드로이드에서만 열람가능합니다.";
+        });
+      }
+      else{
+        dataMenu_s = dataMenu['menuLines'].join('\n');
+        setState(() {
+          foodData = dataMenu_s;
+        });
+      }
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
@@ -32,6 +33,41 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class MenuFetcher {
+  static Future<Map<String, dynamic>> fetchMenuDataFromFirestore(
+      DateTime selectedDate, int time) async {
+    try {
+      final today = DateFormat('MM-dd').format(selectedDate);
+
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('Menu')
+              .where('selectedDate', isEqualTo: today)
+              .where('selectedLocation', isEqualTo: 'student') // 추가 조건
+              .where('time', isEqualTo: time)
+              .get();
+      print(today);
+      print(time);
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        final data = doc.data();
+
+        return {
+          'menuLines': List<String>.from(data['menuLines']),
+          'selectedDate': data['selectedDate'],
+          'selectedLocation': data['selectedLocation'],
+          'time': data['time'],
+        };
+      } else {
+        return {'error': '해당 날짜의 메뉴가 존재하지 않습니다.'};
+      }
+    } catch (e) {
+      return {'error': '오류: $e'};
+    }
   }
 }
 
@@ -121,11 +157,35 @@ class _MyListWidgetState extends State<MyListWidget> {
         });
       }
     } catch (e) {
-      setState(() {
-        breakfastData = "오류: $e";
-        lunchData = "오류: $e";
-      });
+      fetchMenuDataFromFirestore();
     }
+  }
+
+  void fetchMenuDataFromFirestore() async {
+      String dataBreakfast_s = "";
+      String dataLunch_s = "";
+      final dataBreakfast =
+          await MenuFetcher.fetchMenuDataFromFirestore(widget.selectedDate, 1);
+      final dataLunch =
+          await MenuFetcher.fetchMenuDataFromFirestore(widget.selectedDate, 2);
+      print("Fetched menuBreakfast data: $dataBreakfast");
+      print("Fetched menuLunch data: $dataLunch");
+      
+      if (dataBreakfast.containsKey('error')) {
+        print("메뉴없음확인");
+        setState(() {
+          breakfastData = "크롬 보안정책상 지난데이터는 안드로이드에서만 열람가능합니다.";
+          lunchData = "크롬 보안정책상 지난데이터는 안드로이드에서만 열람가능합니다.";
+        });
+      }
+      else{
+        dataBreakfast_s = dataBreakfast['menuLines'].join('\n');
+        dataLunch_s = dataLunch['menuLines'].join('\n');
+        setState(() {
+          breakfastData = dataBreakfast_s;
+          lunchData = dataLunch_s;
+        });
+      }
   }
 
   Widget _buildPriceWidget(String price,

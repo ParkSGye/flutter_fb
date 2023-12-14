@@ -44,38 +44,37 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBcG1m0XILwiE2J23Bvzepx8yHxlecEfys',
-    appId: '1:1047897370733:web:059cc2c6eb4ac6b203cf64',
-    messagingSenderId: '1047897370733',
-    projectId: 'copy-dabdd',
-    authDomain: 'copy-dabdd.firebaseapp.com',
-    storageBucket: 'copy-dabdd.appspot.com',
-    measurementId: 'G-G1YG50DJ1B',
+    apiKey: 'AIzaSyC7ZkCsszIHMH65PJ7NVOEPrhKogGXR46U',
+    appId: '1:396865649397:web:97fd1ee83b6a5b8a1e63bc',
+    messagingSenderId: '396865649397',
+    projectId: 'bincher-flutter-project',
+    authDomain: 'bincher-flutter-project.firebaseapp.com',
+    storageBucket: 'bincher-flutter-project.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDG-DArlP3RI686noH2K6Xgqym-6AVVK-0',
-    appId: '1:1047897370733:android:c2d1d88118418c5203cf64',
-    messagingSenderId: '1047897370733',
-    projectId: 'copy-dabdd',
-    storageBucket: 'copy-dabdd.appspot.com',
+    apiKey: 'AIzaSyBJY3gpt0n6VhPo1aq3tmPB4Vfju30dOGQ',
+    appId: '1:396865649397:android:6eb943f1a7fc0d351e63bc',
+    messagingSenderId: '396865649397',
+    projectId: 'bincher-flutter-project',
+    storageBucket: 'bincher-flutter-project.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBexiTWrB4V_0BU6IkQnGcE9Uq6JZb8vCA',
-    appId: '1:1047897370733:ios:60f781888120564603cf64',
-    messagingSenderId: '1047897370733',
-    projectId: 'copy-dabdd',
-    storageBucket: 'copy-dabdd.appspot.com',
+    apiKey: 'AIzaSyD4bxBKum5R2JYFwg382fyiaj0OF-HwPKY',
+    appId: '1:396865649397:ios:98712103adb699fd1e63bc',
+    messagingSenderId: '396865649397',
+    projectId: 'bincher-flutter-project',
+    storageBucket: 'bincher-flutter-project.appspot.com',
     iosBundleId: 'com.example.flutterFb',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBexiTWrB4V_0BU6IkQnGcE9Uq6JZb8vCA',
-    appId: '1:1047897370733:ios:17f4593d4e9e815703cf64',
-    messagingSenderId: '1047897370733',
-    projectId: 'copy-dabdd',
-    storageBucket: 'copy-dabdd.appspot.com',
+    apiKey: 'AIzaSyD4bxBKum5R2JYFwg382fyiaj0OF-HwPKY',
+    appId: '1:396865649397:ios:68ecdb971e062a721e63bc',
+    messagingSenderId: '396865649397',
+    projectId: 'bincher-flutter-project',
+    storageBucket: 'bincher-flutter-project.appspot.com',
     iosBundleId: 'com.example.flutterFb.RunnerTests',
   );
 }
